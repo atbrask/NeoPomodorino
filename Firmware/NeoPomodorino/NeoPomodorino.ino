@@ -94,6 +94,7 @@ void startPomodoro()
   starttime = millis();
   duration = POMODORO_TIME * 60000;
   currentState = Pomodoro;
+  initLeds();
 }
 
 void startPause()
@@ -109,6 +110,7 @@ void startPause()
     duration = LONG_PAUSE * 60000;
     currentState = LongPause;
   }
+  initLeds();
 }
 
 ButtonClick getButtonClick()
@@ -179,4 +181,23 @@ void blink(int ledcount)
     delay(200);
   }
 }
+
+void initLeds()
+{
+  uint32_t color;
+  if (currentState == Pomodoro)
+    color = ring.Color(LUMINANCE, 0, 0);
+  else if (currentState == ShortPause)
+    color = ring.Color(LUMINANCE, LUMINANCE, 0);
+  else if (currentState == LongPause)
+    color = ring.Color(0, LUMINANCE, 0);
+
+  for(int i = PIXEL_COUNT; i > 0; i--)
+  {
+    ring.setPixelColor(i - 1, color);
+    ring.show();
+    delay(20);
+  }
+}
+
 
